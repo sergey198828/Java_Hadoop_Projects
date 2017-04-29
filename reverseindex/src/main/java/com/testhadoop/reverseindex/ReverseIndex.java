@@ -9,7 +9,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
 
-/* Reverse index class implements MapReduce concept to build reverse index of files containing words given random files in specified HDFS location */
+/* Reverse index class implements MapReduce concept to build reverse index of files containing words and number of occurrences given random files in specified HDFS location */
 public class ReverseIndex {
 
 /* Map class implements Mapper interface of MapReduce */
@@ -29,13 +29,26 @@ public class ReverseIndex {
     
 /* Reduce class implements Reducer interface of MapReduce */
     public static class Reduce extends MapReduceBase implements Reducer<Text, Text, Text, Text> {
-/* Reduce method for each word creates a string of all file names containing this word and delimited by spaces */
+/* Reduce method for each word creates a Map of all file names and number of occurrences containing this word and print it using default toString method */
         public void reduce(Text word, Iterator<Text> fileNames, OutputCollector<Text, Text> output, Reporter reporter) throws IOException {
-            //Declare output file names container
-        	Set<String> outFileNames = new TreeSet<String>();
-            //Fill container with file names and deduplicate in the same time
+            //Declare output file names and number of occurrences container
+        	java.util.Map<String, Integer> outFileNames = new TreeMap<String, Integer>();
+            //Fill container with file names and occurrences. Deduplicate and Sort using default Map behavior
         	while (fileNames.hasNext()){
-        		outFileNames.add(fileNames.next().toString());
+        		String nextFileName = fileNames.next().toString();
+        		int occurence =1;
+        		//If input was already combined, split the string to key/value again
+        		if(nextFileName.matches("\\{[a-z0-9]+=[a-z0-9]+\\}")){
+        			String[] tempStr = nextFileName.substring(1, nextFileName.length()-1).split("=");
+        			nextFileName = tempStr[0];
+        			occurence = Integer.parseInt(tempStr[1]);
+        		}
+        		if(!outFileNames.containsKey(nextFileName)){
+        			outFileNames.put(nextFileName, occurence);
+        		}else{
+        			int count = outFileNames.get(nextFileName); 
+        			outFileNames.put(nextFileName, count + occurence);
+        		}
         	}
             //Sending result to Hadoop
         	output.collect(word, new Text(outFileNames.toString()));
@@ -47,7 +60,10 @@ public class ReverseIndex {
 	    //Create new job object and give name to it
 		JobConf conf = new JobConf(ReverseIndex.class);
 	    conf.setJobName("reverseindex");
-	    //Configure output values types
+	    //Configure mapper output values
+	    conf.setMapOutputKeyClass(Text.class);
+	    conf.setMapOutputValueClass(Text.class);
+	    //Configure job output values types
 	    conf.setOutputKeyClass(Text.class);
 	    conf.setOutputValueClass(Text.class);
 	    //Link mapper, reducer and combiner classes to the job
