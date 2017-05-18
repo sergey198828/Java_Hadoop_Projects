@@ -26,8 +26,7 @@ public class SalesTotalTest extends TestCase
 		SalesTotal.Reduce reducer = new SalesTotal.Reduce();
 	    mapDriver = MapDriver.newMapDriver(mapper);
 	    reduceDriver = ReduceDriver.newReduceDriver(reducer);
-	    mapReduceDriver = MapReduceDriver.newMapReduceDriver(mapper,reducer);
-	    
+	    mapReduceDriver = MapReduceDriver.newMapReduceDriver(mapper,reducer);  
 	}	  
 	/*
 	 * Test MapWritableComoarable class

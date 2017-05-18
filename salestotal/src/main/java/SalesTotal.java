@@ -132,7 +132,7 @@ public class SalesTotal {
 	    job.setOutputValueClass(MapWritableComparable.class);
 	    //Link mapper, reducer and combiner classes to the job	
 	    job.setMapperClass(Map.class);
-	    //job.setCombinerClass(Reduce.class);
+	    job.setCombinerClass(Reduce.class);
 	    job.setReducerClass(Reduce.class);
         //Configure input and output formats
 	    job.setInputFormatClass(TextInputFormat.class);
