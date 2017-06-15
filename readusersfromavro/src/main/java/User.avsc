@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "User",
+  "doc" : "Sqoop import of QueryResult",
+  "fields" : [ {
+    "name" : "id",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "id",
+    "sqlType" : "4"
+  }, {
+    "name" : "username",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "username",
+    "sqlType" : "12"
+  } ],
+  "tableName" : "QueryResult"
+}
