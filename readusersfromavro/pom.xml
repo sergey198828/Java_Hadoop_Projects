@@ -1,0 +1,111 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.testhadoop</groupId>
+	<artifactId>readusersfromavro</artifactId>
+	<version>0.1</version>
+	<packaging>jar</packaging>
+
+	<name>readusersfromavro</name>
+	<url>http://readusersfomavro.testhadoop.com</url>
+
+	<properties>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  	</properties>
+
+  	<dependencies>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+      		<groupId>junit</groupId>
+      		<artifactId>junit</artifactId>
+      		<version>4.12</version>
+      		<scope>test</scope>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.apache.mrunit/mrunit -->
+		<dependency>
+	    	<groupId>org.apache.mrunit</groupId>
+		    <artifactId>mrunit</artifactId>
+		    <version>1.1.0</version>
+		    <classifier>hadoop2</classifier>
+		    <scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common -->
+		<dependency>
+		    <groupId>org.apache.hadoop</groupId>
+		    <artifactId>hadoop-common</artifactId>
+		    <version>2.7.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-mapreduce-client-core -->
+		<dependency>
+		    <groupId>org.apache.hadoop</groupId>
+		    <artifactId>hadoop-mapreduce-client-core</artifactId>
+		    <version>2.7.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.sqoop/sqoop -->		
+		<dependency>
+	    	<groupId>org.apache.sqoop</groupId>
+	    	<artifactId>sqoop</artifactId>
+	    	<version>1.4.4</version>
+	    	<classifier>hadoop200</classifier>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.avro/avro -->
+		<dependency>
+		    <groupId>org.apache.avro</groupId>
+		    <artifactId>avro</artifactId>
+		    <version>1.8.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.avro/avro-mapred -->
+		<dependency>
+		    <groupId>org.apache.avro</groupId>
+		    <artifactId>avro-mapred</artifactId>
+		    <version>1.8.2</version>
+		</dependency>
+  	</dependencies>
+ 	<build>
+		<pluginManagement>
+	 		<plugins>
+	 			<plugin>
+			  		<groupId>org.apache.avro</groupId>
+			  		<artifactId>avro-maven-plugin</artifactId>
+			  		<version>1.8.2</version>
+			  		<executions>
+			    		<execution>
+			      			<phase>generate-sources</phase>
+			      			<goals>
+			        			<goal>schema</goal>
+			      			</goals>
+			      			<configuration>
+			        			<sourceDirectory>${project.basedir}/src/main/java/</sourceDirectory>
+			        			<outputDirectory>${project.basedir}/target/generated-sources/</outputDirectory>
+			      			</configuration>
+			    		</execution>
+			  		</executions>
+	 			</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.0.0</version>
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+						<archive>
+						  <manifest>
+						    <mainClass>ReadUsersFromAvro</mainClass>
+						  </manifest>
+						</archive>
+					</configuration>
+					<executions>
+						<execution>
+							<id>make-assembly</id> <!-- this is used for inheritance merges -->
+							<phase>package</phase> <!-- bind to the packaging phase -->
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+ 		</pluginManagement>
+	</build>
+</project>
